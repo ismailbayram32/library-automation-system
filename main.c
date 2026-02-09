@@ -291,7 +291,7 @@ void dosyadanYukle(OGR** ogrenci, KITAP** kitap, YAZAR** yazar, KitapYazar** esl
     int gun1, ay1, yil1, gun2, ay2, yil2;
     char etiketNo1[20], etiketNo2[20];
     // Yazarları oku
-    fp1 = fopen("yazarlar.csv", "r");
+    fp1 = fopen("data/yazarlar.csv", "r");
     if (fp1 != NULL) {
         while (fgets(line, sizeof(line), fp1)) {
             YAZAR* yeni = (YAZAR*)malloc(sizeof(YAZAR));
@@ -321,7 +321,7 @@ void dosyadanYukle(OGR** ogrenci, KITAP** kitap, YAZAR** yazar, KitapYazar** esl
         fclose(fp1);
     }
     // Öğrencileri oku
-    fp1 = fopen("ogrenciler.csv", "r");
+    fp1 = fopen("data/ogrenciler.csv", "r");
     if(fp1 != NULL){
         while(fgets(line, sizeof(line), fp1)){
             OGR* yeni = (OGR*)malloc(sizeof(OGR));
@@ -352,7 +352,7 @@ void dosyadanYukle(OGR** ogrenci, KITAP** kitap, YAZAR** yazar, KitapYazar** esl
         fclose(fp1);
     }
     // Kitapları oku
-    fp1 = fopen("kitaplar.csv", "r");
+    fp1 = fopen("data/kitaplar.csv", "r");
     if(fp1 != NULL){
         while(fgets(line, sizeof(line), fp1)){
             KITAP* yeni = (KITAP*)malloc(sizeof(KITAP));
@@ -380,7 +380,7 @@ void dosyadanYukle(OGR** ogrenci, KITAP** kitap, YAZAR** yazar, KitapYazar** esl
         fclose(fp1);
     }
     // Kitap örneklerini oku
-    fp1 = fopen("kitapOrnekleri.csv", "r");
+    fp1 = fopen("data/kitapOrnekleri.csv", "r");
     if (fp1 != NULL) {
         while (fgets(line, sizeof(line), fp1)) {
             sscanf(line, "%[^,],%s", etiketNo, durum);
@@ -405,7 +405,7 @@ void dosyadanYukle(OGR** ogrenci, KITAP** kitap, YAZAR** yazar, KitapYazar** esl
         }
         fclose(fp1);
     }
-    fp1 = fopen("kitapYazar.csv", "r");
+    fp1 = fopen("data/kitapYazar.csv", "r");
     if(fp1 != NULL){
         // Satır sayısını bul
         *satir = 0;
@@ -430,7 +430,7 @@ void dosyadanYukle(OGR** ogrenci, KITAP** kitap, YAZAR** yazar, KitapYazar** esl
     }
     
     // Kitap Ödünç bilgilerini oku ve kitap sayılarını hesapla
-    fp1 = fopen("kitapOdunc.csv", "r");
+    fp1 = fopen("data/kitapOdunc.csv", "r");
     if (fp1 != NULL) {
         // Her öğrenci için şu anda elindeki kitap sayısını hesapla
         
@@ -451,7 +451,7 @@ void dosyadanYukle(OGR** ogrenci, KITAP** kitap, YAZAR** yazar, KitapYazar** esl
     }
     
     // Geç teslim edilen kitapları kontrol et ve flag'leri güncelle
-    fp1 = fopen("kitapOdunc.csv", "r");
+    fp1 = fopen("data/kitapOdunc.csv", "r");
     if (fp1 != NULL) {
         
         rewind(fp1);
@@ -459,7 +459,7 @@ void dosyadanYukle(OGR** ogrenci, KITAP** kitap, YAZAR** yazar, KitapYazar** esl
             sscanf(line1, "%[^,],%d,%d,%d.%d.%d", etiketNo1, &ogrID1, &islem1, &gun1, &ay1, &yil1);
             
             if(islem1 == 0) { // Ödünç alma kaydı
-                FILE* fp2 = fopen("kitapOdunc.csv", "r");
+                FILE* fp2 = fopen("data/kitapOdunc.csv", "r");
                 int bulundu = 0;
                 
                 while(fgets(line2, sizeof(line2), fp2) && !bulundu) {
@@ -542,8 +542,8 @@ int yazarSil(YAZAR** head, int yazarID){
     }
     free(curr);
     //yazarlar.csv dosyasından silme
-    fp1 = fopen("yazarlar.csv", "r");
-    fp2 = fopen("yazarlar_temp.csv", "w");
+    fp1 = fopen("data/yazarlar.csv", "r");
+    fp2 = fopen("data/yazarlar_temp.csv", "w");
     while(fgets(satir, sizeof(satir), fp1)){
         sscanf(satir, "%*[^,],%*[^,],%d", &idFile);
         if(idFile != yazarID){    
@@ -551,10 +551,10 @@ int yazarSil(YAZAR** head, int yazarID){
         }
     }
     fclose(fp1), fclose(fp2);
-    remove("yazarlar.csv");
-    rename("yazarlar_temp.csv", "yazarlar.csv");
-    fp1 = fopen("kitapYazar.csv", "r");
-    fp2 = fopen("kitapYazar_temp.csv", "w");
+    remove("data/yazarlar.csv");
+    rename("data/yazarlar_temp.csv", "data/yazarlar.csv");
+    fp1 = fopen("data/kitapYazar.csv", "r");
+    fp2 = fopen("data/kitapYazar_temp.csv", "w");
 
     while(fgets(satir, sizeof(satir), fp1)){
         sscanf(satir, "%[^,],%d", etiketNo, &idFile);
@@ -566,8 +566,8 @@ int yazarSil(YAZAR** head, int yazarID){
         }
     }
     fclose(fp1), fclose(fp2);
-    remove("kitapYazar.csv");
-    rename("kitapYazar_temp.csv", "kitapYazar.csv");
+    remove("data/kitapYazar.csv");
+    rename("data/kitapYazar_temp.csv", "data/kitapYazar.csv");
     return 1;
 }
 void yazarGuncelle(YAZAR* head, int yazarID){
@@ -583,7 +583,7 @@ void yazarGuncelle(YAZAR* head, int yazarID){
     curr->ad[strcspn(curr->ad, "\n")] = '\0';
     printf("Yazarin guncellenen soyadini giriniz: ");
     scanf("%s", curr->soyad);
-    fp1 = fopen("yazarlar.csv", "w");
+    fp1 = fopen("data/yazarlar.csv", "w");
     curr = head;
     while(curr != NULL){
         fprintf(fp1, "%s,%s,%d\n", curr->ad, curr->soyad, curr->yazarID);
@@ -594,7 +594,7 @@ void yazarGuncelle(YAZAR* head, int yazarID){
 }
 void yazarGoruntule(YAZAR* head, KITAP* kitapHead, int yazarID){
     YAZAR* curr = yazarBul(head, yazarID);
-    FILE* fp1 = fopen("kitapYazar.csv", "r");
+    FILE* fp1 = fopen("data/kitapYazar.csv", "r");
     char satirStr[150], isbn[14];
     int yazarIDcsv, ctrl = 0;
     if(curr == NULL){
@@ -620,7 +620,7 @@ void yazarGoruntule(YAZAR* head, KITAP* kitapHead, int yazarID){
 }
 void yazarListe(YAZAR** head, YAZAR* yazar){
     YAZAR* curr = *head;
-    FILE *fp1 = fopen("yazarlar.csv", "a");
+    FILE *fp1 = fopen("data/yazarlar.csv", "a");
     if(*head == NULL){
         *head = yazar;
     }
@@ -684,8 +684,8 @@ int ogrenciSil(OGR** head, int studentID, KITAP* headKitap){
     }
     free(curr);
     //ogrenciler.csv dosyasından silme
-    fp1 = fopen("ogrenciler.csv", "r");
-    fp2 = fopen("ogrenciler_temp.csv", "w");
+    fp1 = fopen("data/ogrenciler.csv", "r");
+    fp2 = fopen("data/ogrenciler_temp.csv", "w");
     while(fgets(satir, sizeof(satir), fp1)){
         sscanf(satir, "%*[^,],%*[^,],%d", &id); // Ad, Soyad, StudentID
         if(id != studentID){
@@ -693,11 +693,11 @@ int ogrenciSil(OGR** head, int studentID, KITAP* headKitap){
         }
     }
     fclose(fp1), fclose(fp2);
-    remove("ogrenciler.csv");
-    rename("ogrenciler_temp.csv", "ogrenciler.csv");
+    remove("data/ogrenciler.csv");
+    rename("data/ogrenciler_temp.csv", "data/ogrenciler.csv");
     if(kitapSayi > 0){ //Teslim etmediği kitap varsa kitap örnekleri dosyasından o kitabı rafta olarak değiştir
-        fp1 = fopen("kitapOrnekleri.csv", "r");
-        fp2 = fopen("kitapOrnekleri_temp.csv", "w");
+        fp1 = fopen("data/kitapOrnekleri.csv", "r");
+        fp2 = fopen("data/kitapOrnekleri_temp.csv", "w");
 
         if(fp1 != NULL && fp2 != NULL){
 
@@ -726,8 +726,8 @@ int ogrenciSil(OGR** head, int studentID, KITAP* headKitap){
 
             fclose(fp1);
             fclose(fp2);
-            remove("kitapOrnekleri.csv");
-            rename("kitapOrnekleri_temp.csv", "kitapOrnekleri.csv");
+            remove("data/kitapOrnekleri.csv");
+            rename("data/kitapOrnekleri_temp.csv", "data/kitapOrnekleri.csv");
         }
     }
     return 1;
@@ -747,7 +747,7 @@ void ogrenciGuncelle(OGR* head, int studentID){
     scanf("%s", curr->soyad);
     printf("Ogrencinin puanini giriniz: ");
     scanf("%d", &curr->puan);
-    fp1 = fopen("ogrenciler.csv", "w");
+    fp1 = fopen("data/ogrenciler.csv", "w");
     curr = head;
     while(curr != NULL){
         fprintf(fp1, "%s,%s,%d,%d\n", curr->ad, curr->soyad, curr->studentID, curr->puan);
@@ -758,7 +758,7 @@ void ogrenciGuncelle(OGR* head, int studentID){
 }
 void ogrenciGoruntule(OGR* head, int studentID){
     OGR* curr = ogrenciBul(head, studentID);
-    FILE* fp1 = fopen("kitapOdunc.csv", "r");
+    FILE* fp1 = fopen("data/kitapOdunc.csv", "r");
     char satir[150], etiketNo[16];
     int ogrIDcsv, islem, gun, ay, yil, ctrl = 0;
     if(curr == NULL){
@@ -823,7 +823,7 @@ void tumOgrenciler(OGR* head){
 }
 void ogrenciListe(OGR** head, OGR* ogrenci){
     OGR* curr = *head, *temp;
-    FILE *fp1 = fopen("ogrenciler.csv", "a");
+    FILE *fp1 = fopen("data/ogrenciler.csv", "a");
     if(*head == NULL){
         *head = ogrenci;
         ogrenci->prev = NULL;
@@ -918,8 +918,8 @@ int kitapSil(KITAP** head, char* isbn){
     }
     free(curr);
     //kitaplar.csv dosyasından silme
-    fp1 = fopen("kitaplar.csv", "r");
-    fp2 = fopen("kitaplar_temp.csv", "w");
+    fp1 = fopen("data/kitaplar.csv", "r");
+    fp2 = fopen("data/kitaplar_temp.csv", "w");
     while(fgets(satir, sizeof(satir), fp1)){
         if(strstr(satir, isbn) == NULL){
             fputs(satir, fp2);
@@ -927,11 +927,11 @@ int kitapSil(KITAP** head, char* isbn){
     }
     fclose(fp1), fclose(fp2);
 
-    remove("kitaplar.csv");
-    rename("kitaplar_temp.csv", "kitaplar.csv");
+    remove("data/kitaplar.csv");
+    rename("data/kitaplar_temp.csv", "data/kitaplar.csv");
     //kitapOrnekleri.csv dosyasından silme
-    fp1 = fopen("kitapOrnekleri.csv", "r");
-    fp2 = fopen("kitapOrnekleri_temp.csv", "w");
+    fp1 = fopen("data/kitapOrnekleri.csv", "r");
+    fp2 = fopen("data/kitapOrnekleri_temp.csv", "w");
     while(fgets(satir, sizeof(satir), fp1)){
         if(strstr(satir, isbn) == NULL){
             fputs(satir, fp2);
@@ -939,11 +939,11 @@ int kitapSil(KITAP** head, char* isbn){
     }
     fclose(fp1), fclose(fp2);
 
-    remove("kitapOrnekleri.csv");
-    rename("kitapOrnekleri_temp.csv", "kitapOrnekleri.csv");
+    remove("data/kitapOrnekleri.csv");
+    rename("data/kitapOrnekleri_temp.csv", "data/kitapOrnekleri.csv");
 
-    fp1 = fopen("kitapYazar.csv", "r");
-    fp2 = fopen("kitapYazar_temp.csv", "w");
+    fp1 = fopen("data/kitapYazar.csv", "r");
+    fp2 = fopen("data/kitapYazar_temp.csv", "w");
     while(fgets(satir, sizeof(satir), fp1)){
         char isbnCsv[20];
         int yazarID;
@@ -955,8 +955,8 @@ int kitapSil(KITAP** head, char* isbn){
     }
 
     fclose(fp1), fclose(fp2);
-    remove("kitapYazar.csv");
-    rename("kitapYazar_temp.csv", "kitapYazar.csv");
+    remove("data/kitapYazar.csv");
+    rename("data/kitapYazar_temp.csv", "data/kitapYazar.csv");
     return 1;
 }
 void kitapGuncelle(KITAP* head, char* isbn){
@@ -1029,7 +1029,7 @@ void kitapGuncelle(KITAP* head, char* isbn){
     }
     
     // Dosya güncellemesi - sadece kitaplar.csv'yi güncelle
-    fp1 = fopen("kitaplar.csv", "w");
+    fp1 = fopen("data/kitaplar.csv", "w");
     temp = head; // head'den başla
     while(temp != NULL){
         fprintf(fp1, "%s,%s,%d\n", temp->ad, temp->isbnNo, temp->adet);
@@ -1038,8 +1038,8 @@ void kitapGuncelle(KITAP* head, char* isbn){
     fclose(fp1);
     
     // kitapOrnekleri.csv'yi sadece değişen kitap için güncelle
-    fp1 = fopen("kitapOrnekleri.csv", "r");
-    fp2 = fopen("kitapOrnekleri_temp.csv", "w");
+    fp1 = fopen("data/kitapOrnekleri.csv", "r");
+    fp2 = fopen("data/kitapOrnekleri_temp.csv", "w");
     
     char satir[150], etiketNo[20], durum[20], isbnTemp[14];
     int index;
@@ -1064,8 +1064,8 @@ void kitapGuncelle(KITAP* head, char* isbn){
     
     fclose(fp1);
     fclose(fp2);
-    remove("kitapOrnekleri.csv");
-    rename("kitapOrnekleri_temp.csv", "kitapOrnekleri.csv");
+    remove("data/kitapOrnekleri.csv");
+    rename("data/kitapOrnekleri_temp.csv", "data/kitapOrnekleri.csv");
     
     printf("Kitap ve ornekleri guncellendi.\n");
 }
@@ -1128,8 +1128,8 @@ void zamanindaTeslimOlmayan(KITAP* head){
 void kitapListe(KITAP** head, KITAP* kitap){
     KITAP* curr = *head;
     KitapOrnek* ornek = kitap->ornek;
-    FILE *fp1 = fopen("kitaplar.csv", "a");
-    FILE *fp2 = fopen("kitapOrnekleri.csv", "a");
+    FILE *fp1 = fopen("data/kitaplar.csv", "a");
+    FILE *fp2 = fopen("data/kitapOrnekleri.csv", "a");
     if(*head == NULL){
         *head = kitap;
     }
@@ -1151,7 +1151,7 @@ void kitapListe(KITAP** head, KITAP* kitap){
 void kitapYazarEsle(KitapYazar** eslesmeler, YAZAR* headYazar, KITAP* headKitap, int* satir){
     int yazarID;
     char isbn[14];
-    FILE* fp1 = fopen("kitapYazar.csv", "a");
+    FILE* fp1 = fopen("data/kitapYazar.csv", "a");
     KITAP* currKit = headKitap;
     YAZAR* currYaz = headYazar;
     *eslesmeler = realloc(*eslesmeler, (*satir + 1) * sizeof(KitapYazar));
@@ -1183,7 +1183,7 @@ void kitapYazarEsle(KitapYazar** eslesmeler, YAZAR* headYazar, KITAP* headKitap,
 void kitapYazarGuncelle(KitapYazar** eslesmeler, YAZAR* headYazar, KITAP* headKitap, int* satir){
     int yazarID, eskiID, yeniID, yazarIDcsv, i = 0;
     char isbn[14], satirStr[150], isbnInfile[17];
-    FILE* fp1 = fopen("kitapYazar.csv", "r");
+    FILE* fp1 = fopen("data/kitapYazar.csv", "r");
     KITAP* currKit = headKitap;
     YAZAR* currYaz = headYazar;
     *eslesmeler = realloc(*eslesmeler, (*satir + 1) * sizeof(KitapYazar));
@@ -1219,8 +1219,8 @@ void kitapYazarGuncelle(KitapYazar** eslesmeler, YAZAR* headYazar, KITAP* headKi
     scanf("%d", &yeniID);
 
     // Dosyada güncelleme işlemi
-    fp1 = fopen("kitapYazar.csv", "r");
-    FILE* fp2 = fopen("kitapYazar_temp.csv", "w");
+    fp1 = fopen("data/kitapYazar.csv", "r");
+    FILE* fp2 = fopen("data/kitapYazar_temp.csv", "w");
 
     while(fgets(satirStr, sizeof(satirStr), fp1)) {
         sscanf(satirStr, "%[^,],%d", isbnInfile, &yazarID);
@@ -1233,8 +1233,8 @@ void kitapYazarGuncelle(KitapYazar** eslesmeler, YAZAR* headYazar, KITAP* headKi
 
     fclose(fp1);
     fclose(fp2);
-    remove("kitapYazar.csv");
-    rename("kitapYazar_temp.csv", "kitapYazar.csv");
+    remove("data/kitapYazar.csv");
+    rename("data/kitapYazar_temp.csv", "data/kitapYazar.csv");
 
     printf("Guncelleme tamamlandi.\n");
 }
@@ -1244,7 +1244,7 @@ void kitapOdunc(KITAP* kitap, OGR* ogrenci){
     KitapOrnek* temp = NULL;
     char durum[10], satir[150], ad[20], soyad[20];
     int ctrl = 0, teslimTarih = 0, alimTarih = 0, studentID, puan;
-    FILE* fp1 = fopen("kitapOdunc.csv", "a");
+    FILE* fp1 = fopen("data/kitapOdunc.csv", "a");
     FILE* fp2, *fp3;
     odunc->kitap = kitap;
     odunc->ogrenci = ogrenci;
@@ -1298,8 +1298,8 @@ void kitapOdunc(KITAP* kitap, OGR* ogrenci){
         teslimTarih = 365 * odunc->yil + 30 * (odunc->ay-1) + odunc->gun;
         if(teslimTarih - alimTarih > 15){
             ogrenci->puan -= 10;
-            fp2 = fopen("ogrenciler.csv", "r");
-            fp3 = fopen("ogrenciler_temp.csv", "w");
+            fp2 = fopen("data/ogrenciler.csv", "r");
+            fp3 = fopen("data/ogrenciler_temp.csv", "w");
             while(fgets(satir, sizeof(satir), fp2)){
                 sscanf(satir, "%[^,],%[^,],%d,%d", ad, soyad, &studentID, &puan);
                 if (studentID == ogrenci->studentID){
@@ -1309,8 +1309,8 @@ void kitapOdunc(KITAP* kitap, OGR* ogrenci){
                 }
             }
             fclose(fp2), fclose(fp3);
-            remove("ogrenciler.csv");
-            rename("ogrenciler_temp.csv", "ogrenciler.csv");
+            remove("data/ogrenciler.csv");
+            rename("data/ogrenciler_temp.csv", "ogrenciler.csv");
             temp->flag = 0;
         }
         strcpy(temp->durum, "rafta");
@@ -1326,7 +1326,7 @@ int oduncCtrl(KITAP* kitap, OGR* ogrenci){
     KitapOrnek* ornek = kitap->ornek;
     char studentID[10], etiketNo[15], islemStr[2], ogrID[10];
     int islem;
-    FILE* fp1 = fopen("kitapOdunc.csv", "r");
+    FILE* fp1 = fopen("data/kitapOdunc.csv", "r");
 
     sprintf(studentID, "%d", ogrenci->studentID);
     while(ornek != NULL){
@@ -1349,7 +1349,7 @@ int alimTarihi(KITAP* kitap, OGR* ogrenci){
     KitapOrnek* ornek = kitap->ornek;
     char studentID[10], etiketNo[15], islemStr[2], ogrID[10];
     int islem, gun, ay, yil, tarih = 0;
-    FILE* fp1 = fopen("kitapOdunc.csv", "r");
+    FILE* fp1 = fopen("data/kitapOdunc.csv", "r");
 
     sprintf(studentID, "%d", ogrenci->studentID);
     while(ornek != NULL){
@@ -1368,8 +1368,8 @@ int alimTarihi(KITAP* kitap, OGR* ogrenci){
     fclose(fp1);
 }
 void kitapOrnekDurumGuncelle(char* etiketNo, char* yeniDurum){
-    FILE* fp1 = fopen("kitapOrnekleri.csv", "r");
-    FILE* fp2 = fopen("kitapOrnekleri_temp.csv", "w");
+    FILE* fp1 = fopen("data/kitapOrnekleri.csv", "r");
+    FILE* fp2 = fopen("data/kitapOrnekleri_temp.csv", "w");
 
     char satir[256];
     char etiket[20], durum[20];
@@ -1391,8 +1391,8 @@ void kitapOrnekDurumGuncelle(char* etiketNo, char* yeniDurum){
 
     fclose(fp1);
     fclose(fp2);
-    remove("kitapOrnekleri.csv");
-    rename("kitapOrnekleri_temp.csv", "kitapOrnekleri.csv");
+    remove("data/kitapOrnekleri.csv");
+    rename("data/kitapOrnekleri_temp.csv", "data/kitapOrnekleri.csv");
 }
 void freeBellek(OGR* ogrHead, KITAP* kitapHead, YAZAR* yazarHead){
     // Öğrenciler
