@@ -49,5 +49,3 @@ This project supports managing **students**, **books**, and **authors**, includi
 
 ---
 
-## 📂 Project Structure
-
